@@ -11,15 +11,13 @@ pipeline {
     }
 
     environment {
-        AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION = "${params.AWS_REGION}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/arunawsdevops/Project-Infra-autodesk.git'
+                git credentialsId: 'GIT-PAT-1', url: 'https://github.com/arunawsdevops/Project-Infra-autodesk.git'
             }
         }
         stage('Terraform Init and Apply') {
