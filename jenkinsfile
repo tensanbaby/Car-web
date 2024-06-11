@@ -13,7 +13,7 @@ pipeline {
     environment {
         AWS_ACCESS_KEY_ID = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
-        AWS_DEFAULT_REGION = 'us-east-1'
+        AWS_DEFAULT_REGION = "${params.AWS_REGION}"
     }
 
     stages {
@@ -25,17 +25,16 @@ pipeline {
         stage('Terraform Init and Apply') {
             steps {
                 script {
-                    // Ensure AWS credentials are available for Terraform
                     withCredentials([string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                                      string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh """
                         cd terraform-directory
                         terraform init
-                        terraform apply -var 'aws_region=${AWS_REGION}' \
-                                        -var 'ecs_cluster_name=${ECS_CLUSTER_NAME}' \
-                                        -var 'ecr_repo_name=${ECR_REPO_NAME}' \
-                                        -var 'image_tag=${IMAGE_TAG}' \
-                                        -var 'aws_account_id=${AWS_ACCOUNT_ID}' \
+                        terraform apply -var 'aws_region=${params.AWS_REGION}' \
+                                        -var 'ecs_cluster_name=${params.ECS_CLUSTER_NAME}' \
+                                        -var 'ecr_repo_name=${params.ECR_REPO_NAME}' \
+                                        -var 'image_tag=${params.IMAGE_TAG}' \
+                                        -var 'aws_account_id=${params.AWS_ACCOUNT_ID}' \
                                         -auto-approve
                         """
                     }
@@ -54,7 +53,7 @@ pipeline {
                 script {
                    sh """
                     $(aws ecr get-login-password --region ${params.AWS_REGION} | docker login --username AWS --password-stdin ${params.AWS_ACCOUNT_ID}.dkr.ecr.${params.AWS_REGION}.amazonaws.com)
-                    docker push ${env.ECR_REPO_URI}:${params.IMAGE_TAG}
+                    docker push ${params.ECR_REPO_NAME}:${params.IMAGE_TAG}
                     """
                 }
             }
