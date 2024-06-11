@@ -19,7 +19,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://your-repo-url.git'
+                git 'https://github.com/arunawsdevops/Project-Infra-autodesk.git'
             }
         }
         stage('Terraform Init and Apply') {
