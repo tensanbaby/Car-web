@@ -4,6 +4,7 @@ pipeline {
     parameters {
         string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: 'AWS Region')
         string(name: 'AWS_ACCOUNT_ID', defaultValue: 'your-aws-account-id', description: 'AWS Account ID')
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker Image Tag')
     }
 
     environment {
@@ -35,7 +36,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    dockerImage = docker.build("your-ecr-repo-name:${params.AWS_REGION}")
+                    dockerImage = docker.build("your-ecr-repo-name:${params.IMAGE_TAG}")
                 }
             }
         }
@@ -44,7 +45,7 @@ pipeline {
                  script {
                      sh """
                          \$(aws ecr get-login-password --region \${params.AWS_REGION} | docker login --username AWS --password-stdin \${params.AWS_ACCOUNT_ID}.dkr.ecr.\${params.AWS_REGION}.amazonaws.com)
-                         docker push your-ecr-repo-name:${params.AWS_REGION}
+                         docker push your-ecr-repo-name:${params.IMAGE_TAG}
                         """
                 }
             }
