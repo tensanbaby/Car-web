@@ -3,7 +3,7 @@ pipeline {
 
     parameters {
         string(name: 'AWS_REGION', defaultValue: 'us-east-1', description: 'AWS Region')
-        string(name: 'AWS_ACCOUNT_ID', defaultValue: 'your-aws-account-id', description: 'AWS Account ID')
+        string(name: 'AWS_ACCOUNT_ID', defaultValue: '6700-0448-7191', description: 'AWS Account ID')
         string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker Image Tag')
     }
 
