@@ -33,31 +33,5 @@ pipeline {
                 }
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    dockerImage = docker.build("your-ecr-repo-name:${params.IMAGE_TAG}")
-                }
-            }
-        }
-        stage('Push to ECR') {
-            steps {
-                 script {
-                     sh """
-                         \$(aws ecr get-login-password --region \${params.AWS_REGION} | docker login --username AWS --password-stdin \${params.AWS_ACCOUNT_ID}.dkr.ecr.\${params.AWS_REGION}.amazonaws.com)
-                         docker push your-ecr-repo-name:${params.IMAGE_TAG}
-                        """
-                }
-            }
-        }
-        stage('Update ECS Service') {
-            steps {
-                script {
-                    sh """
-                    aws ecs update-service --cluster green-app-cluster --service green-app-service --force-new-deployment
-                    """
-                }
-            }
-        }
     }
 }
