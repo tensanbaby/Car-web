@@ -14,7 +14,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git credentialsId: 'jenkins-git', url: 'https://github.com/arunawsdevops/Car-web.git'
+                git credentialsId: 'GIT-PAT-1', url: 'https://github.com/arunawsdevops/Project-Infra-autodesk.git'
             }
         }
         stage('Terraform Init and Apply') {
