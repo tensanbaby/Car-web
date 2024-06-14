@@ -21,5 +21,18 @@ pipeline {
         }
       }
     }
+
+    stage('Push to Dockerhub') {
+      steps {
+        script {
+          withCredentials([usernamePassword(credentialsId: 'dockerhub-devops', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
+            sh "docker login -u ${DOCKER_HUB_USERNAME} -p '${DOCKER_HUB_PASSWORD}'"
+            
+            sh "docker tag ${params.DOCKER_IMAGE_NAME}:latest ${env.DOCKER_HUB_USERNAME}/${params.DOCKER_IMAGE_NAME}:latest"
+            sh "docker push ${DOCKER_HUB_USERNAME}/${params.DOCKER_IMAGE_NAME}:latest"
+          }
+        }
+      }
+    }
   }
 }
