@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        choice(name: 'TERRAFORM_ACTION', choices: ['apply', 'destroy'], description: 'Select Terraform action to perform')
+        choice(name: 'TERRAFORM_ACTION', choices: ['apply', 'destroy', 'plan'], description: 'Select Terraform action to perform')
         string(name: 'USER_NAME', defaultValue: 'Arun', description: 'Specify who is running the code')
     }
 
@@ -46,6 +46,10 @@ pipeline {
                         dir('Project-Infra-autodesk') {
                             sh 'terraform destroy -auto-approve'
                         }
+                    } else if (params.TERRAFORM_ACTION == 'plan') {
+                        dir('Project-Infra-autodesk') {
+                            sh 'terraform plan'
+                        }
                     } else {
                         error "Invalid Terraform action selected: ${params.TERRAFORM_ACTION}"
                     }
@@ -73,7 +77,7 @@ pipeline {
                     echo "ECS Service Name: ${ECS_SERVICE_NAME}"
                     
                     // Checkout application code
-                    checkout([$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-git', url: 'https://github.com/arunawsdevops/Car-web.git']]])
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-git', url: 'https://github.com/arunawsdevops/Car-web.git']]])
                     sh "ls -l"
                     
                     // Set environment variables dynamically
@@ -113,8 +117,12 @@ pipeline {
             steps {
                 script {
                     withAWS(credentials: 'aws-cred', region: AWS_DEFAULT_REGION) {
-                        // Update ECS task definition to use the newly pushed Docker image
-                        sh "aws ecs register-task-definition --cli-input-json file://ecs-task-definition.json --region ${AWS_DEFAULT_REGION}"
+                        // Ensure the ecs-task-definition.json file is present
+                        if (fileExists('ecs-task-definition.json')) {
+                            sh "aws ecs register-task-definition --cli-input-json file://ecs-task-definition.json --region ${AWS_DEFAULT_REGION}"
+                        } else {
+                            error 'ecs-task-definition.json file not found in the workspace'
+                        }
                     }
                 }
             }
