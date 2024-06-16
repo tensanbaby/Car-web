@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'github-pat', variable: 'GITHUB_PAT')]) {
-                        sh "git clone https://$GITHUB_PAT@github.com/arunawsdevops/Project-Infra-autodesk.git"
+                        sh "git clone https://$GITHUB_PAT@github.com/arunawsdevops/Car-web.git"
                     }
                 }
             }
@@ -99,6 +99,22 @@ pipeline {
                         sh "docker build -t ${ECR_REPO_NAME} . -f Dockerfile"
                         sh "docker tag ${ECR_REPO_NAME}:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
                         sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest"
+                    }
+                }
+            }
+        }
+
+        stage('Update ECS Task Definition') {
+            when {
+                expression {
+                    return params.TERRAFORM_ACTION == 'apply'
+                }
+            }
+            steps {
+                script {
+                    withAWS(credentials: 'aws-cred', region: AWS_DEFAULT_REGION) {
+                        // Update ECS task definition to use the newly pushed Docker image
+                        sh "aws ecs register-task-definition --cli-input-json file://ecs-task-definition.json --region ${AWS_DEFAULT_REGION}"
                     }
                 }
             }
