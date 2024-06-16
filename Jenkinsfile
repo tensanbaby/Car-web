@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'github-pat', variable: 'GITHUB_PAT')]) {
-                        sh "git clone https://$GITHUB_PAT@github.com/arunawsdevops/Car-web.git"
+                        sh "git clone https://$GITHUB_PAT@github.com/arunawsdevops/Project-Infra-autodesk.git"
                     }
                 }
             }
