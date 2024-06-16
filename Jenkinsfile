@@ -74,13 +74,7 @@ pipeline {
                     
                     // Checkout application code
                     checkout([$class: 'GitSCM', branches: [[name: '*/*']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'jenkins-git', url: 'https://github.com/arunawsdevops/Car-web.git']]])
-                    sh "ls -l"
-                    
-                    // Set environment variables dynamically
-                    env.AWS_ACCOUNT_ID = AWS_ACCOUNT_ID
-                    env.ECR_REPO_NAME = ECR_REPO_NAME
-                    env.ECS_CLUSTER_NAME = ECS_CLUSTER_NAME
-                    env.ECS_SERVICE_NAME = ECS_SERVICE_NAME
+
                 }
             }
         }
