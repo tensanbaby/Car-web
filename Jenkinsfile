@@ -117,7 +117,6 @@ pipeline {
             steps {
                 script {
                     withAWS(credentials: 'aws-cred', region: AWS_DEFAULT_REGION) {
-                        // Ensure the ecs-task-definition.json file is present
                         if (fileExists('ecs-task-definition.json')) {
                             sh "aws ecs register-task-definition --cli-input-json file://ecs-task-definition.json --region ${AWS_DEFAULT_REGION}"
                         } else {
