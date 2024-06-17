@@ -120,7 +120,7 @@ pipeline {
                             "containerDefinitions": [
                                 {
                                     "name": "green-app",
-                                    "image": "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${ECR_REPO_NAME}:latest",
+                                    "image": "670004487191.dkr.ecr.us-east-1.amazonaws.com/test-project-repo:latest",
                                     "essential": true,
                                     "portMappings": [
                                         {
