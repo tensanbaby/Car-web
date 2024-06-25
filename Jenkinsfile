@@ -46,7 +46,7 @@ pipeline {
             }
         }
 
-        stage('Integrate with EKS') {
+        stage('Deployment to EKS-cluster') {
             steps {
                 script {
                     withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'EKS-K8', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
