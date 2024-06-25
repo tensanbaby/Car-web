@@ -50,7 +50,10 @@ pipeline {
             steps {
                 script {
                     withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'EKS-K8', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                        sh 'kubectl get nodes' 
+                        sh 'kubectl get nodes'
+                        sh 'kubectl apply -f car-deploy.yaml'
+                        sh 'kubectl apply -f car-svc.yaml'
+                        sh 'kubectl get svc canary-svc -o wide'
                     }
                 }
             }
