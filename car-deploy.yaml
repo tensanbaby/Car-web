@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue-app
+  namespace: devops
+spec:
+  replicas: 2
+  selector: 
+    matchLabels:
+      name: canary
+  template:
+    metadata:
+      labels:
+        name: canary
+    spec:
+      containers:
+      - name: mercedes
+        image: arunawsdevops/car-image:latest
+        ports:
+        - containerPort: 80
+          protocol: TCP
