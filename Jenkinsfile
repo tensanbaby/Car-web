@@ -54,6 +54,8 @@ pipeline {
                         sh 'kubectl apply -f car-deploy.yaml'
                         sh 'kubectl apply -f car-svc.yaml'
                         sh 'kubectl get svc canary-svc -o wide'
+                        sh 'kubectl scale deployment blue-app --replicas=3'
+
                     }
                 }
             }
