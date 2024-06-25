@@ -45,5 +45,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Integrate with EKS') {
+            steps {
+                script {
+                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'EKS-K8', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                        sh 'kubectl get nodes' 
+                    }
+                }
+            }
+        }
     }
 }
