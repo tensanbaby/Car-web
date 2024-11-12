@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     // Assuming 'dockerhub-devops' is the ID of your Docker Hub credentials
-                    withCredentials([usernamePassword(credentialsId: 'Docker_Pat', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'Docker_Pat', passwordVariable: 'Docker', /*usernameVariable: 'DOCKER_HUB_USERNAME'*/)]) {
                         // Log in to Docker Hub using provided credentials
                         sh "echo '${DOCKER_HUB_PASSWORD}' | docker login -u ${tensanbaby} --password-stdin"
                         
