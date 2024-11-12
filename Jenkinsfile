@@ -31,20 +31,40 @@ pipeline {
         }
 
         stage('Push to Docker Hub') {
+    steps {
+        script {
+            // Use Docker credentials to log in, tag, and push the Docker image
+            withCredentials([usernamePassword(credentialsId: 'Docker_Pat', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                
+                // Log in to Docker Hub using credentials stored in Jenkins
+                sh "echo '${DOCKER_PASSWORD}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                
+                // Tag the Docker image with the username and image name
+                sh "docker tag ${params.DOCKER_IMAGE_NAME}:latest ${DOCKER_USERNAME}/${params.DOCKER_IMAGE_NAME}:latest"
+                
+                // Push the Docker image to Docker Hub
+                sh "docker push ${DOCKER_USERNAME}/${params.DOCKER_IMAGE_NAME}:latest"
+            }
+        }
+    }
+}
+
+
+       /* stage('Push to Docker Hub') {
             steps {
                 script {
                     // Assuming 'dockerhub-devops' is the ID of your Docker Hub credentials
-                    withCredentials([usernamePassword(credentialsId: 'Docker_Pat', passwordVariable: 'Docker', /*usernameVariable: 'DOCKER_HUB_USERNAME'*/)]) {
+                    withCredentials([usernamePassword(credentialsId: 'Docker_Pat', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                         // Log in to Docker Hub using provided credentials
-                        sh "echo '${DOCKER_HUB_PASSWORD}' | docker login -u ${tensanbaby} --password-stdin"
+                        sh "echo '${DOCKER_PASSWORD}' | docker login -u ${tensanbaby} --password-stdin"
                         
                         // Tag and push the built Docker image to Docker Hub
                         sh "docker tag ${params.DOCKER_IMAGE_NAME}:latest ${tensanbaby}/${params.DOCKER_IMAGE_NAME}:latest"
-                        sh "docker push ${tensanbaby}/${params.DOCKER_IMAGE_NAME}:latest"
+                       sh "docker push ${DOCKER_USERNAME}/${params.DOCKER_IMAGE_NAME}:latest" 
                     }
                 }
             }
-        }
+        }*/
 
         stage('Deployment to EKS-cluster') {
             steps {
