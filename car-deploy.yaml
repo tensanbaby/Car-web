@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mercedes
-        image: arunawsdevops/car-image:latest
+        image: tensanbaby/car-image:latest
         ports:
         - containerPort: 80
           protocol: TCP
