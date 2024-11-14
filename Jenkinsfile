@@ -69,7 +69,7 @@ pipeline {
         stage('Deployment to EKS-cluster') {
             steps {
                 script {
-                    withKubeConfig(caCertificate: '', clusterName: '', contextName: '', credentialsId: 'EKS-CLUSTER', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
+                    withKubeConfig(caCertificate: '', clusterName: 'eks-cluster', contextName: '', credentialsId: 'EKS-CLUSTER', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
                         sh 'kubectl get nodes'
                         sh 'kubectl apply -f car-deploy.yaml'
                         sh 'kubectl apply -f car-svc.yaml'
