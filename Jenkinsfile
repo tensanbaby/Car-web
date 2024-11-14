@@ -70,13 +70,14 @@ pipeline {
             steps {
                 script {
                     withKubeConfig(caCertificate: '', clusterName: 'eks-cluster', contextName: '', credentialsId: 'EKS-CLUSTER', namespace: '', restrictKubeConfigAccess: false, serverUrl: '') {
-                       sh '''
+                    /*   sh '''
                        kubectl get nodes
                         kubectl apply -f car-deploy.yaml
                         kubectl apply -f car-svc.yaml
                         kubectl get svc canary-svc -o wide
                         kubectl scale deployment blue-app --replicas=3
                         '''
+                        */
 
                     }
                 }
